@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'screens/daily_challenge_screen.dart';
 import 'utils/challenge_helper.dart';
 import 'screens/history_screen.dart';
+import 'screens/interest_selection_screen.dart';
+import 'screens/interest_list_screen.dart';
+import 'utils/personal_challenge_generator.dart';
+import 'screens/unlocked_interests_screen.dart';
+
 
 void main() {
   runApp(BeCreativeApp());
@@ -96,6 +101,40 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       },
                       child: Text('Ver historial de retos'),
                     ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => InterestSelectionScreen(),
+                          ),
+                        );
+                      },
+                      child: Text('Elegir intereses creativos'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => UnlockedInterestsScreen(),
+                          ),
+                        );
+                      },
+                      child: Text('Mis retos por intereses'),
+                    ),
+                    /*
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => InterestListScreen(),
+                          ),
+                        );
+                      },
+                      child: Text('Explorar retos por intereses'),
+                    )*/
             ],
           ),
         ),
