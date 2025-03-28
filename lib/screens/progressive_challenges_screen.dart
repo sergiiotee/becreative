@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../utils/progressive_challenge_helper.dart';
+import 'challenge_response_screen.dart';
 
 class ProgressiveChallengesScreen extends StatefulWidget {
   final String interest;
@@ -88,16 +89,22 @@ class _ProgressiveChallengesScreenState extends State<ProgressiveChallengesScree
                 final isDone = _completedChallenges.contains(challenge);
 
                 return ListTile(
-                  leading: Icon(
-                    isDone ? Icons.check_circle : Icons.radio_button_unchecked,
-                    color: isDone ? Colors.green : null,
-                  ),
-                  title: Text(challenge),
-                  onTap: isDone
-                      ? null
-                      : () {
-                          _markCompleted(challenge);
-                        },
+                    leading: Icon(
+                        isDone ? Icons.check_circle : Icons.radio_button_unchecked,
+                        color: isDone ? Colors.green : null,
+                    ),
+                    title: Text(challenge),
+                    onTap: () {
+                        Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => ChallengeResponseScreen(
+                            interest: widget.interest,
+                            challenge: challenge,
+                            ),
+                        ),
+                        ).then((_) => _loadChallenges()); // refrescar al volver
+                    },
                 );
               },
             ),
@@ -106,4 +113,24 @@ class _ProgressiveChallengesScreenState extends State<ProgressiveChallengesScree
       ),
     );
   }
+}
+
+Future<void> saveChallengeResponse(String interest, String challenge, {String? text, String? imagePath}) async {
+  final prefs = await SharedPreferences.getInstance();
+  final keyPrefix = '${interest}_${challenge.hashCode}';
+  if (text != null) await prefs.setString('response_text_$keyPrefix', text);
+  if (imagePath != null) await prefs.setString('response_image_$keyPrefix', imagePath);
+}
+
+Future<Map<String, String?>> getChallengeResponse(String interest, String challenge) async {
+  final prefs = await SharedPreferences.getInstance();
+  final keyPrefix = '${interest}_${challenge.hashCode}';
+  final text = prefs.getString('response_text_$keyPrefix');
+  final imagePath = prefs.getString('response_image_$keyPrefix');
+  return {'text': text, 'imagePath': imagePath};
+}
+
+Future<bool> isChallengeCompleted(String interest, String challenge) async {
+  final list = await getCompletedChallengesForInterest(interest);
+  return list.contains(challenge);
 }
