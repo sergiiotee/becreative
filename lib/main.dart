@@ -7,6 +7,8 @@ import 'screens/interest_list_screen.dart';
 import 'utils/personal_challenge_generator.dart';
 import 'screens/unlocked_interests_screen.dart';
 import 'screens/progress_summary_screen.dart';
+import 'screens/portfolio_screen.dart';
+
 
 void main() {
   runApp(BeCreativeApp());
@@ -131,6 +133,17 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         );
                       },
                       child: Text('Ver mi progreso por intereses'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const PortfolioScreen(),
+                          ),
+                        );
+                      },
+                      child: const Text('Ver mi portafolio'),
                     ),
                     /*
                     TextButton(
