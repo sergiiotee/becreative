@@ -105,56 +105,14 @@ class _ProgressiveChallengesScreenState extends State<ProgressiveChallengesScree
                                 challenge: challenge,
                               ),
                             ),
-                          ).then((_) => _loadChallenges()); // recargar al volver
+                          ).then((_) => _loadChallenges());
                         },
                 );
+              },
             ),
           ),
         ],
       ),
     );
   }
-}
-
-Future<void> saveChallengeResponse(String interest, String challenge, {String? text, String? imagePath}) async {
-  final prefs = await SharedPreferences.getInstance();
-  final keyPrefix = '${interest}_${challenge.hashCode}';
-  if (text != null) await prefs.setString('response_text_$keyPrefix', text);
-  if (imagePath != null) await prefs.setString('response_image_$keyPrefix', imagePath);
-}
-
-Future<Map<String, String?>> getChallengeResponse(String interest, String challenge) async {
-  final prefs = await SharedPreferences.getInstance();
-  final keyPrefix = '${interest}_${challenge.hashCode}';
-  final text = prefs.getString('response_text_$keyPrefix');
-  final imagePath = prefs.getString('response_image_$keyPrefix');
-  return {'text': text, 'imagePath': imagePath};
-}
-
-Future<bool> isChallengeCompleted(String interest, String challenge) async {
-  final list = await getCompletedChallengesForInterest(interest);
-  return list.contains(challenge);
-}
-
-import 'package:shared_preferences/shared_preferences.dart';
-
-Future<void> saveChallengeResponse(String interest, String challenge,
-    {String? text, String? imagePath}) async {
-  final prefs = await SharedPreferences.getInstance();
-  final keyPrefix = '${interest}_${challenge.hashCode}';
-  if (text != null) await prefs.setString('response_text_$keyPrefix', text);
-  if (imagePath != null) await prefs.setString('response_image_$keyPrefix', imagePath);
-}
-
-Future<Map<String, String?>> getChallengeResponse(String interest, String challenge) async {
-  final prefs = await SharedPreferences.getInstance();
-  final keyPrefix = '${interest}_${challenge.hashCode}';
-  final text = prefs.getString('response_text_$keyPrefix');
-  final imagePath = prefs.getString('response_image_$keyPrefix');
-  return {'text': text, 'imagePath': imagePath};
-}
-
-Future<bool> isChallengeCompleted(String interest, String challenge) async {
-  final completedList = await getCompletedChallengesForInterest(interest);
-  return completedList.contains(challenge);
 }

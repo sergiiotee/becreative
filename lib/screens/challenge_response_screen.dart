@@ -62,24 +62,48 @@ class _ChallengeResponseScreenState extends State<ChallengeResponseScreen> {
 
   Future<void> _save() async {
     String? imagePath;
+
+    // 1. Guardar la imagen (si existe)
     if (_image != null) {
-      final directory = await getApplicationDocumentsDirectory();
-      final filename = '${widget.interest}_${widget.challenge.hashCode}.jpg';
-      final savedImage = await _image!.copy('${directory.path}/$filename');
-      imagePath = savedImage.path;
+      try {
+        final directory = await getApplicationDocumentsDirectory();
+        final filename = '${widget.interest}_${widget.challenge.hashCode}.jpg';
+        final savedImage = await _image!.copy('${directory.path}/$filename');
+        imagePath = savedImage.path;
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error guardando la imagen: $e')),
+        );
+        return;
+      }
     }
 
-    // Guarda la respuesta (texto e imagen) para este reto e interés.
-    await saveChallengeResponse(
-      widget.interest,
-      widget.challenge,
-      text: _controller.text.trim(),
-      imagePath: imagePath,
-    );
+    // 2. Guardar texto e imagen en SharedPreferences
+    try {
+      await saveChallengeResponse(
+        widget.interest,
+        widget.challenge,
+        text: _controller.text.trim(),
+        imagePath: imagePath,
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error guardando la respuesta: $e')),
+      );
+      return;
+    }
 
-    // Marca como completado el reto para el interés.
-    await markChallengeProgress(widget.interest, widget.challenge);
+    // 3. Marcar el reto como completado
+    try {
+      await markChallengeProgress(widget.interest, widget.challenge);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error marcando el reto como completado: $e')),
+      );
+      return;
+    }
 
+    // 4. Actualizar estado local y notificar al usuario
     setState(() {
       _alreadyCompleted = true;
     });

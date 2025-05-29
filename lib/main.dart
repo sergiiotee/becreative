@@ -8,21 +8,27 @@ import 'utils/personal_challenge_generator.dart';
 import 'screens/unlocked_interests_screen.dart';
 import 'screens/progress_summary_screen.dart';
 import 'screens/portfolio_screen.dart';
+//import 'package:firebase_core/firebase_core.dart';
+import 'auth_wrapper.dart';
 
-
-void main() {
-  runApp(BeCreativeApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  //await Firebase.initializeApp(); // Inicializa Firebase
+  runApp(const BeCreativeApp());
 }
 
 class BeCreativeApp extends StatelessWidget {
+  const BeCreativeApp({super.key});
+  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'becreative',
       theme: ThemeData(
+        primarySwatch: Colors.indigo,
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
       ),
+      //home: const AuthWrapper(),
       home: WelcomeScreen(),
     );
   }

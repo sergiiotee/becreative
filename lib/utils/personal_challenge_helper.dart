@@ -11,8 +11,17 @@ Future<void> markPersonalChallengeAsCompleted(String interest, String challenge)
   }
 }
 
+/// Recupera la lista de retos completados para un interés dado.
+/// En caso de error, devuelve una lista vacía.
 Future<List<String>> getCompletedChallengesForInterest(String interest) async {
-  final prefs = await SharedPreferences.getInstance();
+  SharedPreferences prefs;
+  try {
+    prefs = await SharedPreferences.getInstance();
+  } catch (e) {
+    print('Error al obtener SharedPreferences: $e');
+    return [];
+  }
+
   final key = 'completed_personal_$interest';
   return prefs.getStringList(key) ?? [];
 }
